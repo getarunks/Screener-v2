@@ -45,21 +45,19 @@ def getEPSG_NoDB(stockSymbol):
     del BS_class
 
 
-def getRatios(stockSymbol):
-    cf = BS_json_extract.compFormat_bussinesStd(stockSymbol)
-    cf.get_compFormat()
-    if cf.result == 'NODATA':
-        print ('No Data for: ' + stockSymbol)
-        del cf
-        return False
-
-    report = BS_get_and_decode_webpage.getData_bussinesStd(cf.result, stockSymbol)
-    if report.getRatios() == False:
+def getRatios_NoDB(stockSymbol):
+    BS = BS_get_and_decode_webpage.getData_bussinesStd(stockSymbol)
+    if BS.getRatios() == False:
         print (stockSymbol + ' error fetching data')
-        del cf
-    #del cf, report
+        del BS
+    
+    print("Ratios                \t%s\t%s\t%s" % (BS.result_dict['RatioYearName1'], BS.result_dict['RatioYearName2'], BS.result_dict['RatioYearName3']))
+    print("Return On Net Worth : \t%s\t%s\t%s" % (BS.result_dict['RONWyear1'], BS.result_dict['RONWyear2'], BS.result_dict['RONWyear3']))
+    print("Interest Coverage   : \t%s\t%s\t%s" % (BS.result_dict['ICyear1'], BS.result_dict['ICyear2'], BS.result_dict['ICyear3'] ))
+    print("Debt-Equity         : \t%s\t%s\t%s" % (BS.result_dict['DEyear1'], BS.result_dict['DEyear2'], BS.result_dict['DEyear3']))
+    del BS
 
-def getPHNoDB(stockSymbol):
+def getPH_NoDB(stockSymbol):
     BS = BS_get_and_decode_webpage.getData_bussinesStd(stockSymbol)
     BS.getPromotorHoldings()
     
@@ -76,12 +74,13 @@ def getPHNoDB(stockSymbol):
             BS.result_dict['FIIQ3'], BS.result_dict['FIIQ4'],BS.result_dict['FIIQ5']))
     print("Mutal Funds             : %s\t\t%s\t\t%s\t\t%s\t\t%s" % (BS.result_dict['MFQ1'], BS.result_dict['MFQ2'],\
             BS.result_dict['MFQ3'], BS.result_dict['MFQ4'], BS.result_dict['MFQ5']))
-   
+    del BS
+    
 def getAllNoDB(stockSymbol):
     print("=============================")
     getEPSG_NoDB(stockSymbol)
     print("=============================")
-    getPHNoDB(stockSymbol)
+    getPH_NoDB(stockSymbol)
     print("=============================")
     getRatios_NoDB(stockSymbol)
     print("=============================")

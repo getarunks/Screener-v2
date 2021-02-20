@@ -389,11 +389,6 @@ class getData_bussinesStd(object):
             result = self.splitString(ratioSource, 'Interest Coverage ratio</td>', '<td class="">' ,'</td>', 1, 3)
             interestCoverage_year1, interestCoverage_year2, interestCoverage_year3 = result['output']
 
-            print("Ratios                \t%s\t%s\t%s" % (year1, year2, year3))
-            print("Return On Net Worth : \t%s\t%s\t%s" % (returnOnNetWorth_year1, returnOnNetWorth_year2, returnOnNetWorth_year3))
-            print("Interest Coverage   : \t%s\t%s\t%s" % (interestCoverage_year1, interestCoverage_year2, interestCoverage_year3 ))
-            print("Debt-Equity         : \t%s\t%s\t%s" % (debtToEquity_year1, debtToEquity_year2, debtToEquity_year3))
-
             self.result_dict['RatioYearName1'] = year1
             self.result_dict['RatioYearName2'] = year2
             self.result_dict['RatioYearName3'] = year3
