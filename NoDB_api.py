@@ -3,7 +3,6 @@ Set of apis to read the derails of DB.
 """
 
 import BS_get_and_decode_webpage
-import common_code
 
 def getEPSG_NoDB(stockSymbol):
     print ("processing stock...", stockSymbol)
@@ -28,7 +27,7 @@ def getEPSG_NoDB(stockSymbol):
     print("On going Annual EPS: %0.2f" % (onGoingAnnualEPS))
     report.clear()
     
-    report = BS_class.yearlyUpdate(None)
+    report = BS_class.fetchYearlyData(updateDB=False)
     if report == False:
         print (stockSymbol + ' error fetching data')
             

@@ -113,7 +113,7 @@ class getData_bussinesStd(object):
             
         return {'success':success, 'output':output, 'itemsReturned':noItems }
 
-    def yearlyUpdate(self, updateDB=1):
+    def fetchYearlyData(self, updateDB=True):
         
         """
         We need matching data. ie. if quaterly data is standalone, we dont need to try consolidated here
@@ -311,33 +311,6 @@ class getData_bussinesStd(object):
             return d
 
         return False
-    def updateCompleteDataBase(self):
-        update_quaterly = 1
-        update_yearly = 1
-        try:
-            qtr_row = readStockDetails_from_Sqlite(self.sqlite_file, self.stockSymbol, True);
-            yearly_row = readStockDetails_from_Sqlite(self.sqlite_file, self.stockSymbol, False);
-            """ if data is uptodate return """
-            if qtr_row!=None and yearly_row!=None and \
-                common_code.current_year == yearly_row[common_code.YearlyIndex_Y1Name] and\
-                common_code.current_qtr == qtr_row[common_code.QuaterlyIndex_Q1Name]:
-                return
-            if common_code.current_qtr == qtr_row[common_code.QuaterlyIndex_Q1Name]:
-                update_quaterly = 0
-                self.qtr_reportType = qtr_row[common_code.QuaterlyIndex_reportType]
-            if common_code.current_year == yearly_row[common_code.YearlyIndex_Y1Name]:
-                update_yearly = 0
-        except :
-            print ("Exception updateCompleteDataBase. May be you want to fix this.")
-            
-        """ proceed with update """
-        if update_quaterly == 1:
-            print ("call quaterlyUpdate ....")
-            if self.quaterlyUpdate() == False:
-                return False
-        if update_yearly == 1:
-            print ("call yearly Update....")
-            self.yearlyUpdate()
            
     def getPromotorHoldings(self):
         try:
