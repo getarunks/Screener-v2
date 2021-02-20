@@ -239,7 +239,7 @@ class getData_bussinesStd(object):
                     RoC = float("{0:.2f}".format(RoC)), reportType = reportType)
             return d
                 
-    def quaterlyUpdate(self, updateDB=1):
+    def fetchQtrlyData(self, updateDB=1):
         try:
             """ Lets start with consolidated and fallback to standalone if not available"""
             reportType = 'Consolidated'
@@ -316,6 +316,7 @@ class getData_bussinesStd(object):
         try:
             source = myUrlopen(self.promotorLink)
             result = self.splitString(source, '(in %)</td>', '<td class="tdh">', '</td>', 1, 5)
+            self.result_dict.clear()
             self.result_dict['PHQuater1'], self.result_dict['PHQuater2'], self.result_dict['PHQuater3'],\
             self.result_dict['PHQuater4'], self.result_dict['PHQuater5'] = result['output']
 
@@ -339,18 +340,6 @@ class getData_bussinesStd(object):
             self.result_dict['MFQ1'], self.result_dict['MFQ2'], self.result_dict['MFQ3'], self.result_dict['MFQ4'],\
             self.result_dict['MFQ5'] = result['output']
 
-            print("in percent                %s\t%s\t%s\t%s\t%s" % (self.result_dict['PHQuater1'], self.result_dict['PHQuater2'],\
-            self.result_dict['PHQuater3'], self.result_dict['PHQuater4'], self.result_dict['PHQuater5'] ))
-            print("Tot PH                  : %s\t\t%s\t\t%s\t\t%s\t\t%s" % (self.result_dict['totalPromoterQ1'], self.result_dict['totalPromoterQ2'],\
-            self.result_dict['totalPromoterQ3'], self.result_dict['totalPromoterQ4'] ,self.result_dict['totalPromoterQ5']))
-            print("Tot Institutions        : %s\t\t%s\t\t%s\t\t%s\t\t%s" % (self.result_dict['totalInstitQ1'], self.result_dict['totalInstitQ2'],\
-            self.result_dict['totalInstitQ3'], self.result_dict['totalInstitQ4'], self.result_dict['totalInstitQ5']))
-            print("Financial Institutions  : %s\t\t%s\t\t%s\t\t%s\t\t%s\n" % (self.result_dict['FinInstitQ1'],  self.result_dict['FinInstitQ2'],
-            self.result_dict['FinInstitQ3'], self.result_dict['FinInstitQ4'], self.result_dict['FinInstitQ4']))
-            print("FII                     : %s\t\t%s\t\t%s\t\t%s\t\t%s" % (self.result_dict['FIIQ1'], self.result_dict['FIIQ2'],\
-            self.result_dict['FIIQ3'], self.result_dict['FIIQ4'],self.result_dict['FIIQ5']))
-            print("Mutal Funds             : %s\t\t%s\t\t%s\t\t%s\t\t%s" % (self.result_dict['MFQ1'], self.result_dict['MFQ2'],\
-            self.result_dict['MFQ3'], self.result_dict['MFQ4'], self.result_dict['MFQ5']))
             return True
 
         except :
