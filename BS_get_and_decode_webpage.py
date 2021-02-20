@@ -298,8 +298,7 @@ class getData_bussinesStd(object):
             print("updateDB...............")
             updateStockDetails_to_Sqlite(self.sqliteFile, self.stockSymbol, True)            
             return True
-        else:
-            
+        else:            
             d = dict(symbol = self.stockSymbol,\
                     EPS_Q1 = Q1, EPS_Q2 = Q2, EPS_Q3 = Q3, EPS_Q4 = Q4,\
                     EPS_Q1YoY = Q1YoY, EPS_Q2YoY = Q2YoY, EPS_Q3YoY = Q3YoY, EPS_Q4YoY = Q4YoY, \
@@ -362,7 +361,6 @@ class getData_bussinesStd(object):
         self.result_dict['CFYear1'] = float(CFyear1)
         self.result_dict['CFYear2'] = float(CFyear2)
         self.result_dict['CFYear3'] = float(CFyear3)
-
         
     def getRatios(self):
         try:

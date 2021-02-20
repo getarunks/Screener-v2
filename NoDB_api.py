@@ -93,3 +93,5 @@ def getAllNoDB(stockSymbol):
     print("=============================")
     getRatios_NoDB(stockSymbol)
     print("=============================")
+    getCashFlow_NoDB(stockSymbol)
+    print("=============================")
