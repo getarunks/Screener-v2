@@ -7,9 +7,6 @@ import common_code
 
 def getEPSG_NoDB(stockSymbol):
     print ("processing stock...", stockSymbol)
-    if common_code.is_stock_blacklisted(stockSymbol):
-        print (stockSymbol, " Blacklisted stock")
-        return
     BS_class = BS_get_and_decode_webpage.getData_bussinesStd(stockSymbol)
     report = BS_class.quaterlyUpdate(None)
     if report == False:
@@ -53,10 +50,8 @@ def getRatios(stockSymbol):
     cf.get_compFormat()
     if cf.result == 'NODATA':
         print ('No Data for: ' + stockSymbol)
-        cf.result = compFormatFailed(stockSymbol)
-        if cf.result == False:
-            del cf
-            return False
+        del cf
+        return False
 
     report = BS_get_and_decode_webpage.getData_bussinesStd(cf.result, stockSymbol)
     if report.getRatios() == False:

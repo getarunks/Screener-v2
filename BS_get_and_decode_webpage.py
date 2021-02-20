@@ -8,16 +8,12 @@ import BS_json_extract
 def myUrlopen(link):
     try:
         source = urlopen(link).read()
-        common_code.webPageAcessed +=1
-        if common_code.webPageAcessed % 10 == 0:
-            print ('web page access count = ', common_code.webPageAcessed)
     except:
         #Sometime server might ot respond, try once again
         print ('open failed. try again after 30 seconds: ')
         time.sleep(30)
         print ('reading after 30 seconds sleep')
         source = urlopen(link).read()
-        common_code.webPageAcessed +=1
     return source.decode()
 
 def getStockLinkId(stockSymbol):
@@ -25,10 +21,8 @@ def getStockLinkId(stockSymbol):
     cf.get_compFormat()
     if cf.result == 'NODATA':
         print ('No Data for: ' + stockSymbol)
-        cf.result = cf.compFormatFailed(stockSymbol)
-        if cf.result == False:
-            del cf
-            return False
+        del cf
+        return False
     return cf
 
 class getData_bussinesStd(object):
