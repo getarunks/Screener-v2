@@ -7,7 +7,7 @@ import BS_get_and_decode_webpage
 def getEPSG_NoDB(stockSymbol):
     print ("processing stock...", stockSymbol)
     BS_class = BS_get_and_decode_webpage.getData_bussinesStd(stockSymbol)
-    report = BS_class.fetchQtrlyData(updateDB=False)
+    report = BS_class.fetchQtrlyEPS(updateDB=False)
     if report == False:
         print (stockSymbol + ' error fetching data')
     print ('Quaterly EPS Data: ' + report['reportType'])
@@ -27,7 +27,7 @@ def getEPSG_NoDB(stockSymbol):
     print("On going Annual EPS: %0.2f" % (onGoingAnnualEPS))
     report.clear()
     
-    report = BS_class.fetchYearlyData(updateDB=False)
+    report = BS_class.fetchYearlyEPS(updateDB=False)
     if report == False:
         print (stockSymbol + ' error fetching data')
             
@@ -43,19 +43,6 @@ def getEPSG_NoDB(stockSymbol):
     
     report.clear()
     del BS_class
-
-
-def getRatios_NoDB(stockSymbol):
-    BS = BS_get_and_decode_webpage.getData_bussinesStd(stockSymbol)
-    if BS.getRatios() == False:
-        print (stockSymbol + ' error fetching data')
-        del BS
-    
-    print("Ratios                \t%s\t%s\t%s" % (BS.result_dict['RatioYearName1'], BS.result_dict['RatioYearName2'], BS.result_dict['RatioYearName3']))
-    print("Return On Net Worth : \t%s\t%s\t%s" % (BS.result_dict['RONWyear1'], BS.result_dict['RONWyear2'], BS.result_dict['RONWyear3']))
-    print("Interest Coverage   : \t%s\t%s\t%s" % (BS.result_dict['ICyear1'], BS.result_dict['ICyear2'], BS.result_dict['ICyear3'] ))
-    print("Debt-Equity         : \t%s\t%s\t%s" % (BS.result_dict['DEyear1'], BS.result_dict['DEyear2'], BS.result_dict['DEyear3']))
-    del BS
 
 def getPH_NoDB(stockSymbol):
     BS = BS_get_and_decode_webpage.getData_bussinesStd(stockSymbol)
@@ -75,7 +62,29 @@ def getPH_NoDB(stockSymbol):
     print("Mutal Funds             : %s\t\t%s\t\t%s\t\t%s\t\t%s" % (BS.result_dict['MFQ1'], BS.result_dict['MFQ2'],\
             BS.result_dict['MFQ3'], BS.result_dict['MFQ4'], BS.result_dict['MFQ5']))
     del BS
+
+def getRatios_NoDB(stockSymbol):
+    BS = BS_get_and_decode_webpage.getData_bussinesStd(stockSymbol)
+    if BS.getRatios() == False:
+        print (stockSymbol + ' error fetching ratios')
+        del BS
     
+    print("Ratios                \t%s\t%s\t%s" % (BS.result_dict['RatioYearName1'], BS.result_dict['RatioYearName2'], BS.result_dict['RatioYearName3']))
+    print("Return On Net Worth : \t%s\t%s\t%s" % (BS.result_dict['RONWyear1'], BS.result_dict['RONWyear2'], BS.result_dict['RONWyear3']))
+    print("Interest Coverage   : \t%s\t%s\t%s" % (BS.result_dict['ICyear1'], BS.result_dict['ICyear2'], BS.result_dict['ICyear3'] ))
+    print("Debt-Equity         : \t%s\t%s\t%s" % (BS.result_dict['DEyear1'], BS.result_dict['DEyear2'], BS.result_dict['DEyear3']))
+    del BS
+
+def getCashFlow_NoDB(stockSymbol):
+    BS = BS_get_and_decode_webpage.getData_bussinesStd(stockSymbol)
+    if BS.getCashFlowData() == False:
+        print (stockSymbol + ' error fetching cash flow')
+        del BS
+        
+    print ('Cash Flow from Operations: ' )
+    print("Year:     %15s\t%15s\t%15s" % (BS.result_dict['CFYearName1'], BS.result_dict['CFYearName2'], BS.result_dict['CFYearName3']))
+    print("in Crs:   %15s\t%15s\t%15s" % (BS.result_dict['CFYear1'], BS.result_dict['CFYear2'], BS.result_dict['CFYear3']))
+  
 def getAllNoDB(stockSymbol):
     print("=============================")
     getEPSG_NoDB(stockSymbol)

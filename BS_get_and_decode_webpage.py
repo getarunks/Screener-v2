@@ -113,7 +113,7 @@ class getData_bussinesStd(object):
             
         return {'success':success, 'output':output, 'itemsReturned':noItems }
 
-    def fetchYearlyData(self, updateDB=True):
+    def fetchYearlyEPS(self, updateDB=True):
         
         """
         We need matching data. ie. if quaterly data is standalone, we dont need to try consolidated here
@@ -140,7 +140,7 @@ class getData_bussinesStd(object):
             self.balanceSheet_source = myUrlopen(self.balance_sheet_link[reportType])
             currentLiabilites = self.balanceSheet_source.split('Current Liabilities</td>')[1].split('<td class="">')[1].split('</td>')[0]
             
-        print ("report type: ", reportType)
+        #print ("report type: ", reportType)
         """
         Some stocks Anuual EPS is listed in finacial overview link, for other
         it is listed in P&L link. To solve this we need the below try except,
@@ -213,8 +213,6 @@ class getData_bussinesStd(object):
         enterpriseValue = float(marketCap) + float(totalDebt)
         earningsYield = float(operatingProfit)/enterpriseValue*100
             
-        print (Y1Name, Y2Name, Y3Name, Y4Name)
-        print (Y1EPS, Y2EPS, Y3EPS, Y4EPS)
         """ We make all 0 denomenators to 0.1 to avoid divide by zero
         """
         Y2EPS = 0.1 if float(Y2EPS) == 0.00 else Y2EPS
@@ -239,7 +237,7 @@ class getData_bussinesStd(object):
                     RoC = float("{0:.2f}".format(RoC)), reportType = reportType)
             return d
                 
-    def fetchQtrlyData(self, updateDB=1):
+    def fetchQtrlyEPS(self, updateDB=1):
         try:
             """ Lets start with consolidated and fallback to standalone if not available"""
             reportType = 'Consolidated'
@@ -251,16 +249,16 @@ class getData_bussinesStd(object):
                 we have to use standalone data
             """
             if Q1Name !=common_code.current_qtr and Q1Name != common_code.previous_qtr:
-                print (self.stockSymbol, " -- consolidated data is not updated. trying standalone by raising an exception")
+                print (self.stockSymbol, " -- consolidated data is not updated(Latest: %s). trying standalone by raising an exception"% (Q1Name))
                 raise
         except Exception:
             reportType = 'Standalone'
             self.Quaterly_1_Source = myUrlopen(self.EPS_Quaterly_1[reportType])
             result = self.splitString(self.Quaterly_1_Source, 'Figures in Rs crore</td>', '<td class="tdh">', '</td>', 1, 4)
-            print(result['output'])
+            #print(result['output'])
             Q1Name, Q2Name, Q3Name, Q4Name = result['output']
             
-        print ("Report Type: ", reportType)
+        #print ("Report Type: ", reportType)
         self.qtr_reportType = reportType
         
         """ Do not proceed if latest qtr data is not any of (current or previous qtr) """
@@ -347,33 +345,25 @@ class getData_bussinesStd(object):
             return False
 
     def getCashFlowData(self):
-        try:
-            cashFlow_source = myUrlopen(self.cashFlow_link)
-            string = 'Net Cash From Operating Activities</td>'
-            CFyear1 = cashFlow_source.split(string)[1].split('<td class="">')[1].split('</td>')[0]
-            CFyear2 = cashFlow_source.split(string)[1].split('<td class="">')[2].split('</td>')[0]
-            CFyear3 = cashFlow_source.split(string)[1].split('<td class="">')[3].split('</td>')[0]
+        cashFlow_source = myUrlopen(self.cashFlow_link)
+        string = 'Net Cash From Operating Activities</td>'
+        CFyear1 = cashFlow_source.split(string)[1].split('<td class="">')[1].split('</td>')[0]
+        CFyear2 = cashFlow_source.split(string)[1].split('<td class="">')[2].split('</td>')[0]
+        CFyear3 = cashFlow_source.split(string)[1].split('<td class="">')[3].split('</td>')[0]
 
-            string = 'Figures in Rs crore</td>'
-            firstYear = cashFlow_source.split(string)[1].split('<td class="tdh">')[1].split('</td>')[0]
-            secondYear = cashFlow_source.split(string)[1].split('<td class="tdh">')[2].split('</td>')[0]
-            thirdYear = cashFlow_source.split(string)[1].split('<td class="tdh">')[3].split('</td>')[0]
+        string = 'Figures in Rs crore</td>'
+        firstYear = cashFlow_source.split(string)[1].split('<td class="tdh">')[1].split('</td>')[0]
+        secondYear = cashFlow_source.split(string)[1].split('<td class="tdh">')[2].split('</td>')[0]
+        thirdYear = cashFlow_source.split(string)[1].split('<td class="tdh">')[3].split('</td>')[0]
 
-            print ('Cash Flow from Operations: ' + self.reportType)
-            print("          %s\t%s\t%s" % (firstYear, secondYear, thirdYear))
-            print("in Crs:   %s\t%s\t%s" % (CFyear1, CFyear2, CFyear3))
+        self.result_dict['CFYearName1'] = firstYear
+        self.result_dict['CFYearName2'] = secondYear
+        self.result_dict['CFYearName3'] = thirdYear
+        self.result_dict['CFYear1'] = float(CFyear1)
+        self.result_dict['CFYear2'] = float(CFyear2)
+        self.result_dict['CFYear3'] = float(CFyear3)
 
-            self.result_dict['CFYearName1'] = firstYear
-            self.result_dict['CFYearName2'] = secondYear
-            self.result_dict['CFYearName3'] = thirdYear
-            self.result_dict['CFYear1'] = float(CFyear1)
-            self.result_dict['CFYear2'] = float(CFyear2)
-            self.result_dict['CFYear3'] = float(CFyear3)
-
-        except :
-            print ('faild in getCashFlowData loop')
-            return False        
-
+        
     def getRatios(self):
         try:
             ratioSource = myUrlopen(self.ratio_link)
